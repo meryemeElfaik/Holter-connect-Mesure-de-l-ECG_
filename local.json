@@ -1,0 +1,665 @@
+[
+    {
+        "id": "99088c50a234d8a3",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1273af44b7eca0cc",
+        "type": "serial in",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "serial": "732c1095.ea1118",
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "bdd97653d131adbf",
+                "0f05c6bc28fd8e69"
+            ]
+        ]
+    },
+    {
+        "id": "bdd97653d131adbf",
+        "type": "function",
+        "z": "99088c50a234d8a3",
+        "name": "getdataserial",
+        "func": "\nif (msg.payload){\nvar value = msg.payload.trim().split(\" \");\nvar hr = parseFloat(value[0]);\n\nvar currentDate = new Date();\nvar formattedDate = currentDate.toLocaleDateString();\nvar formattedTime = currentDate.toLocaleTimeString();\n\nvar data = {\n\n\nhr: hr,\n\ndate : formattedDate,\n\ntime : formattedTime};\n\nmsg.payload = data\n\n}\n\nelse {msg = null;}\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 100,
+        "wires": [
+            [
+                "5743d46dd6b21f1e",
+                "a82eca7d6ef699a9",
+                "8174316fc1b79a59"
+            ]
+        ]
+    },
+    {
+        "id": "1fe5fd37f8fa2da0",
+        "type": "file",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "filename": "/home/pi/Documents/Données-IOT/data-1.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1030,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5743d46dd6b21f1e",
+        "type": "trigger",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "payl",
+        "duration": "10",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "topic",
+        "topic": "payload",
+        "outputs": 1,
+        "x": 680,
+        "y": 80,
+        "wires": [
+            [
+                "1fe5fd37f8fa2da0",
+                "a4ce24072e45139c",
+                "bd3cfdc15c4b2b85"
+            ]
+        ]
+    },
+    {
+        "id": "0f05c6bc28fd8e69",
+        "type": "function",
+        "z": "99088c50a234d8a3",
+        "name": "seuil",
+        "func": "//\n//return msg;\nvar values = msg.payload.trim().split(\" \");\nvar hr = parseFloat(values[0]);\n\nif (hr>90){\n\n\n    var currentDate=new Date();\n    //var formattedDate = currentDate.toLocaleDateString();\n    var formattedTime = currentDate.toLocaleTimeString();\n\n\n    var dataObjet = {\n        hr: hr,\n        //date:formattedDate,\n        time:formattedTime\n};\nmsg.payload= dataObjet;\n//node.warn(\"frequence cardiaque:\"+dataObjet.hr);\n\nreturn msg;}\n\nelse { \n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 440,
+        "wires": [
+            [
+                "d236e748a09cf7fd",
+                "88731f6fb8c2d06c"
+            ]
+        ]
+    },
+    {
+        "id": "d236e748a09cf7fd",
+        "type": "file",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "filename": "/home/pi/Documents/Données-IOT/data-2.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 990,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bbc2adb7a1d6069c",
+        "type": "ui_chart",
+        "z": "99088c50a234d8a3",
+        "name": "ECG_PERIODIQUE",
+        "group": "2a50ccf5525fb0b6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "ECG_périodique",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1160,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a4ce24072e45139c",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "52df34ec0b865ae5",
+        "type": "ui_chart",
+        "z": "99088c50a234d8a3",
+        "name": "ECG_direct",
+        "group": "ec09c61bd4a36ff1",
+        "order": 2,
+        "width": "6",
+        "height": "6",
+        "label": "ECG_Direct",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "200",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1130,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5766b3d8a3c78454",
+        "type": "ui_gauge",
+        "z": "99088c50a234d8a3",
+        "name": "ECG_DIRECT",
+        "group": "ec09c61bd4a36ff1",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "ECG_Direct",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1140,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "14403821d7d13be5",
+        "type": "ui_gauge",
+        "z": "99088c50a234d8a3",
+        "name": "ECG_PERIODIQUE",
+        "group": "2a50ccf5525fb0b6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "ECG_périodique",
+        "label": "bpm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1160,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "4c9dc9fdb3685710",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "5976d892459d4422",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "bd3cfdc15c4b2b85",
+        "type": "function",
+        "z": "99088c50a234d8a3",
+        "name": "Recperer_HR",
+        "func": "\nreturn {payload: msg.payload.hr} ;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 260,
+        "wires": [
+            [
+                "5976d892459d4422",
+                "14403821d7d13be5",
+                "bbc2adb7a1d6069c"
+            ]
+        ]
+    },
+    {
+        "id": "88731f6fb8c2d06c",
+        "type": "trigger",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "payl",
+        "duration": "10",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "topic",
+        "topic": "payload",
+        "outputs": 1,
+        "x": 680,
+        "y": 500,
+        "wires": [
+            [
+                "4c9dc9fdb3685710",
+                "3023537d85353ed6"
+            ]
+        ]
+    },
+    {
+        "id": "a82eca7d6ef699a9",
+        "type": "function",
+        "z": "99088c50a234d8a3",
+        "name": "recuperer_HR-direct",
+        "func": "\nreturn {payload: msg.payload.hr} ;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 380,
+        "wires": [
+            [
+                "52df34ec0b865ae5",
+                "5766b3d8a3c78454"
+            ]
+        ]
+    },
+    {
+        "id": "4e5887b618c4cacf",
+        "type": "ui_date_picker",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "label": "dateFin",
+        "group": "9c6d2e4ac04f01f1",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "dateFin",
+        "topicType": "msg",
+        "className": "",
+        "x": 800,
+        "y": 760,
+        "wires": [
+            [
+                "043b87ba882ee447",
+                "51b6d07318392b70"
+            ]
+        ]
+    },
+    {
+        "id": "3124b8f40a8dd34e",
+        "type": "json",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 610,
+        "y": 840,
+        "wires": [
+            [
+                "043b87ba882ee447",
+                "c1ebb448b00aa413"
+            ]
+        ]
+    },
+    {
+        "id": "043b87ba882ee447",
+        "type": "function",
+        "z": "99088c50a234d8a3",
+        "name": "function 3",
+        "func": "\nif (msg.payload && msg.dateFin && msg.dateDebut){\nvar value = msg.payload.trim().split(\" \");\nvar hr = parseFloat(value[0]);\n\nvar currentDate = new Date();\nvar formattedDate = currentDate.toLocaleDateString();\nvar formattedTime = currentDate.toLocaleTimeString();\n\nvar data = {\n\n\nhr: hr,\n\ndate : formattedDate,\n\ntime : formattedTime};\n\nmsg.payload = data\n\n}\n\nelse {msg = null;}\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d4badcf5d2204216",
+        "type": "ui_date_picker",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "label": "dateDebut",
+        "group": "9c6d2e4ac04f01f1",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "dateDebut",
+        "topicType": "msg",
+        "className": "",
+        "x": 810,
+        "y": 900,
+        "wires": [
+            [
+                "043b87ba882ee447",
+                "5cdacb362a579e33"
+            ]
+        ]
+    },
+    {
+        "id": "c1ebb448b00aa413",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "5cdacb362a579e33",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "dateDebut",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "51b6d07318392b70",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "dateFin",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "15fe9393ce74694b",
+        "type": "file in",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "filename": "/home/pi/Documents/Données-IOT/data-1.json",
+        "filenameType": "str",
+        "format": "lines",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 280,
+        "y": 840,
+        "wires": [
+            [
+                "3124b8f40a8dd34e",
+                "300875b65a4b5bb4"
+            ]
+        ]
+    },
+    {
+        "id": "300875b65a4b5bb4",
+        "type": "debug",
+        "z": "99088c50a234d8a3",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "8174316fc1b79a59",
+        "type": "file",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "filename": "/home/pi/Documents/Données-IOT/data-3.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 760,
+        "y": 20,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3023537d85353ed6",
+        "type": "file",
+        "z": "99088c50a234d8a3",
+        "name": "",
+        "filename": "/home/pi/Documents/Données-IOT/data-4.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1000,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e8b80bf70e4cb279",
+        "type": "ui_spacer",
+        "z": "99088c50a234d8a3",
+        "name": "spacer",
+        "group": "fb8813db52b08a45",
+        "order": 1,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "732c1095.ea1118",
+        "type": "serial-port",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "2a50ccf5525fb0b6",
+        "type": "ui_group",
+        "name": "ECG Périodique",
+        "tab": "1c42ad99de1a9a6a",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ec09c61bd4a36ff1",
+        "type": "ui_group",
+        "name": "ECG DIRECT",
+        "tab": "1c42ad99de1a9a6a",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9c6d2e4ac04f01f1",
+        "type": "ui_group",
+        "name": "période",
+        "tab": "1c42ad99de1a9a6a",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1c42ad99de1a9a6a",
+        "type": "ui_tab",
+        "name": "DB",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]

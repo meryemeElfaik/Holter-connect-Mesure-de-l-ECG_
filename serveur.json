@@ -1,0 +1,857 @@
+[
+    {
+        "id": "6e237dea746a180c",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f025d56dbfa5e80d",
+        "type": "mqtt in",
+        "z": "6e237dea746a180c",
+        "name": "mqtt from TTN ",
+        "topic": "v3/projet-zineb-meryeme@ttn/devices/eui-0004a30b001e5dd8/up",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "06477b34f7a396cf",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "2033340ea6f5194e",
+                "2d3d6f09ac804e6e",
+                "f0c7ef161c7a4488",
+                "fa22aa4316b44c91",
+                "2ce8822ac4f64035"
+            ]
+        ]
+    },
+    {
+        "id": "2033340ea6f5194e",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "hr-heure-date",
+        "func": "\n\n\nvar hrValue = msg.payload.uplink_message.decoded_payload.hr;\n\nvar donneesTraitement = {\n\n    //timestamp: Date.now(),\n    //payload: msg.payload,\n    dateArrivee: new Date().toLocaleDateString(),\n    heureArrivee: new Date().toLocaleTimeString(),\n    hr: hrValue,\n    //messqage alert\n    alerte:0,\n    alerte_msg:\"\"\n};\n\n// Envoyez les données traitées à la sortie\nreturn { topic: 'mesure_hr', payload: donneesTraitement };\n\n// hr: msg.payload['uplink_message']['decoded_payload']*/",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 380,
+        "wires": [
+            [
+                "63c7bffa8da8d8e9",
+                "39797cb5b5ec2dde",
+                "91413de424c7d448"
+            ]
+        ]
+    },
+    {
+        "id": "63c7bffa8da8d8e9",
+        "type": "file",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "filename": "C:\\Users\\lenovo\\Documents\\app_iot (3)\\result1.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 770,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2d3d6f09ac804e6e",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "hr",
+        "func": "var hrValue = msg.payload.uplink_message.decoded_payload.hr;\nreturn { payload: hrValue};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 200,
+        "wires": [
+            [
+                "7891d9d75e088202",
+                "e66181f9e73bffaa",
+                "20a7a1fc7712bdb1"
+            ]
+        ]
+    },
+    {
+        "id": "7891d9d75e088202",
+        "type": "ui_chart",
+        "z": "6e237dea746a180c",
+        "name": "hr_direct",
+        "group": "7505d9cc6004f98b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "hr-direct",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 940,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f0c7ef161c7a4488",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "seuil",
+        "func": "\nvar hrValue = msg.payload.uplink_message.decoded_payload.hr;\n\n// Vérifier si la valeur de hr est supérieure à 90\nif (hrValue > 90) {\n    var donneesTraitement = {\n        //timestamp: Date.now(),\n        //payload: msg.payload,\n        dateArrivee: new Date().toLocaleDateString(),\n        heureArrivee: new Date().toLocaleTimeString(),\n        hr: hrValue\n    };\n\n    // Envoyez les données traitées à la sortie\n    return { payload: donneesTraitement };\n} else {\n    // Si la valeur de hr n'est pas supérieure à 90, ne rien faire (ou ajouter une autre logique selon vos besoins)\n    return null;\n}\n\n\n\n\n// // Récupérer la valeur du slider depuis le message (assurez-vous que le message contient la valeur du slider)\n// var seuil = msg.payload.sliderValue;  // Assurez-vous d'ajuster ceci en fonction de la structure réelle du message\n\n// // Récupérer la valeur de hr depuis le message (remplacez cela par votre logique existante)\n// var hrValue = msg.payload.uplink_message.decoded_payload.hr;\n\n// // Comparer la valeur de hr avec le seuil\n// if (hrValue > seuil) {\n//     var donneesTraitement = {\n//         dateArrivee: new Date().toLocaleDateString(),\n//         heureArrivee: new Date().toLocaleTimeString(),\n//         hr: hrValue\n//     };\n\n//     // Envoyez les données traitées à la sortie\n//     // Utilisez une propriété spécifique pour transporter les données destinées au nœud Chart\n//     return { payload: donneesTraitement, chartData: donneesTraitement };\n// } else {\n//     // Si la valeur de hr n'est pas supérieure au seuil, ne rien faire\n//     return null;\n// }\n\n\n\n\n// var seuil = msg.payload;\n\n\n// var hrValue = msg.payload.uplink_message.decoded_payload.hr;\n// if (hrValue > seuil) {\n// var donneesTraitement = {\n\n   \n//     dateArrivee: new Date().toLocaleDateString(),\n//     heureArrivee: new Date().toLocaleTimeString(),\n//     hr: hrValue \n// };\n\n// // Envoyez les données traitées à la sortie\n// return { payload: donneesTraitement };} else { return null;}\n\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 40,
+        "wires": [
+            [
+                "059610386c8cb8b3"
+            ]
+        ]
+    },
+    {
+        "id": "059610386c8cb8b3",
+        "type": "file",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "filename": "C:\\Users\\lenovo\\Documents\\app_iot (3)\\result.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1020,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b5a129af4da616fb",
+        "type": "debug",
+        "z": "6e237dea746a180c",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "fa22aa4316b44c91",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "snr",
+        "func": "var snrValue = {}\nsnrValue.payload = msg.payload.uplink_message.rx_metadata[0].snr;\nreturn snrValue;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 100,
+        "wires": [
+            [
+                "f55a73d8336aec50"
+            ]
+        ]
+    },
+    {
+        "id": "f55a73d8336aec50",
+        "type": "ui_gauge",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "group": "71fe565a02820c4b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "SNR",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-200",
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 950,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2ce8822ac4f64035",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "RSSI",
+        "func": "\nvar snrValue = {}\nsnrValue.payload = msg.payload.uplink_message.rx_metadata[0].rssi;\nreturn snrValue;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "6f9d30545d08791f"
+            ]
+        ]
+    },
+    {
+        "id": "6f9d30545d08791f",
+        "type": "ui_gauge",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "group": "71fe565a02820c4b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "RSSI",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-200",
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 950,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e66181f9e73bffaa",
+        "type": "delay",
+        "z": "6e237dea746a180c",
+        "name": "periodique",
+        "pauseType": "delay",
+        "timeout": "60",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 730,
+        "y": 300,
+        "wires": [
+            [
+                "3ba215ba43ba2757",
+                "3b8bb450e7036159"
+            ]
+        ]
+    },
+    {
+        "id": "3ba215ba43ba2757",
+        "type": "ui_chart",
+        "z": "6e237dea746a180c",
+        "name": "hr_perio",
+        "group": "a9fc57da2e570600",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "hr-périodique",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 940,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3b8bb450e7036159",
+        "type": "ui_gauge",
+        "z": "6e237dea746a180c",
+        "name": "hr__perio",
+        "group": "a9fc57da2e570600",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "hr-péroidique",
+        "label": "bpm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 940,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "20a7a1fc7712bdb1",
+        "type": "ui_gauge",
+        "z": "6e237dea746a180c",
+        "name": "hr_direct",
+        "group": "7505d9cc6004f98b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "hr-direct",
+        "label": "Bpm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 940,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "8a45c18b774e44f3",
+        "type": "ui_slider",
+        "z": "6e237dea746a180c",
+        "name": "Slider",
+        "label": "",
+        "tooltip": "ajuster la valeur du seuil",
+        "group": "d94bfb8edbbb6967",
+        "order": 11,
+        "width": 5,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "200",
+        "step": 1,
+        "className": "",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "badee4c394bcba20",
+                "2706f54ee52aea80"
+            ]
+        ]
+    },
+    {
+        "id": "2706f54ee52aea80",
+        "type": "ui_text",
+        "z": "6e237dea746a180c",
+        "group": "d94bfb8edbbb6967",
+        "order": 12,
+        "width": 1,
+        "height": 1,
+        "name": "hr_slider_value",
+        "label": "",
+        "format": "<font size =8>{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "Arial,Arial,Helvetica,sans-serif",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 380,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "eb674d66544ccee4",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "get_mesure",
+        "func": "var test = msg.payload;\n\nreturn{ topic: 'mesure', payload: test};",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1410,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "badee4c394bcba20",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "get_seuil",
+        "func": "var test1 = msg.payload;\n\nreturn{ topic: 'seuil', payload: test1};",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 600,
+        "wires": [
+            [
+                "39797cb5b5ec2dde",
+                "b5a129af4da616fb"
+            ]
+        ]
+    },
+    {
+        "id": "39797cb5b5ec2dde",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "comparaison",
+        "func": "\n// return msg;\n\n// context.node = context.node || 0;\n// context.node1 = context.node1 || 0;\n\n// if(msg.topic == 'seuil'){\n//     context.node = msg.payload;\n// } else if (msg.topic == 'mesure'){\n//     context.node1 = msg.payload;\n// }\n\n\n// if (context.node > context.node1){\n//     return{topic: 'd', payload: 1}\n// }else{\n//     return{topic: 'e', payload: 0}\n// }\n\n\n\n// // Initialisation des variables si elles n'existent pas\n// context.node = context.node || 0;\n// context.node1 = context.node1 || 0;\n\n// // Mise à jour des variables en fonction du topic\n// if (msg.topic == 'seuil') {\n//     context.node = msg.payload;\n// } else if (msg.topic == 'mesure') {\n//     context.node1 = msg.payload;\n// }\n\n// // Comparaison et retour du résultat\n// if (context.node1 > context.node) {\n//     return { topic: 'd', payload: 1 };\n// } else {\n//     return { topic: 'e', payload: 0 };\n// }\n\n/////////////////////////////////////////////////////////\n// Initialisation des variables si elles n'existent pas\n// context.node = context.node || 0;\n// context.node1 = context.node1 || 0;\n\n// // Mise à jour des variables en fonction du topic\n// if (msg.topic == 'seuil') {\n//     context.node = msg.payload;\n// } else if (msg.topic == 'mesure') {\n//     context.node1 = msg.payload;\n// }\n\n// // Comparaison et retour du résultat\n// if (context.node1 < context.node) {\n//     return { topic: 'd', payload: 0 };\n// } else {\n//     return { topic: 'e', payload: 1 };\n// }\n////////////////////////////////////////////////\n\n\ncontext.node = context.node || 0;\ncontext.node1 = context.node1 || 0;\n\n// Mise à jour des variables en fonction du topic\nif (msg.topic == 'seuil') {\n    context.node = msg.payload;\n} else if (msg.topic == 'mesure_hr') {\n    context.node1 = msg.payload.hr;\n}\n\n// Comparaison et retour du résultat\nif (context.node1 < context.node) {\n    msg.payload.alerte=0;\n    return { topic: 'OK', payload: msg.payload };\n} else {\n    msg.payload.alerte = 1;\n    return { topic: 'KO', payload: msg.payload};\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 600,
+        "wires": [
+            [
+                "068c638772f159a6",
+                "cd37830956af4cb4"
+            ]
+        ]
+    },
+    {
+        "id": "da018fbd8e75f091",
+        "type": "change",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$flowContext('var1')",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 600,
+        "wires": [
+            [
+                "ab14e05af1fc4e18"
+            ]
+        ]
+    },
+    {
+        "id": "ab14e05af1fc4e18",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "ETAT",
+        "func": "\n// return msg;\n\n// var o;\n// if(msg.payload>0) o = \"ALERT\";\n// else o = \"ALL GOOD\";\n// return {\n//  payload:o\n// };\n\n\n// var o;\n\n// if (msg.payload === 0) {\n//     o = \"ALL GOOD\";\n// } else (msg.payload === 1) \n//     o = \"ALERT\";\n// return {\n//     payload: o\n// };\n\n\n\n// console.log(\"Valeur de msg.payload:\", msg.payload);\nif (msg.payload.alerte == 0)\n    msg.payload.alerte_msg =\"ALL GOOD\";\nelse\n    msg.payload.alerte_msg =\"ALERTE\" ;\n\nreturn {\n    payload: msg.payload\n};\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 600,
+        "wires": [
+            [
+                "24042eeb9fc3b923",
+                "4a15648f8dcf7677"
+            ]
+        ]
+    },
+    {
+        "id": "068c638772f159a6",
+        "type": "debug",
+        "z": "6e237dea746a180c",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "91413de424c7d448",
+        "type": "debug",
+        "z": "6e237dea746a180c",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "cd37830956af4cb4",
+        "type": "change",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "var1",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 500,
+        "wires": [
+            [
+                "da018fbd8e75f091"
+            ]
+        ]
+    },
+    {
+        "id": "f932f8df591d1beb",
+        "type": "debug",
+        "z": "6e237dea746a180c",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.alerte_msg",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1460,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "24042eeb9fc3b923",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "enregistrement data",
+        "func": "if(msg.payload.alerte == 1){\n    var data = {\n\n        dateArrivee: msg.payload.dateArrivee,\n        heureArrivee: msg.payload.heureArrivee,\n        hr: msg.payload.hr\n    };\n    return { payload: data };\n}\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 640,
+        "wires": [
+            [
+                "39285aa9617afc26"
+            ]
+        ]
+    },
+    {
+        "id": "5990a34321b1d8cc",
+        "type": "debug",
+        "z": "6e237dea746a180c",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1780,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "39285aa9617afc26",
+        "type": "file",
+        "z": "6e237dea746a180c",
+        "name": "",
+        "filename": "C:\\Users\\lenovo\\Documents\\app_iot (3)\\result2.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1210,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "446381dc7165888c",
+        "type": "ui_led",
+        "z": "6e237dea746a180c",
+        "order": 2,
+        "group": "d94bfb8edbbb6967",
+        "width": "2",
+        "height": "2",
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "square",
+        "showGlow": true,
+        "name": "",
+        "x": 1190,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "4a15648f8dcf7677",
+        "type": "function",
+        "z": "6e237dea746a180c",
+        "name": "signe",
+        "func": "var signe;\nif (msg.payload.alerte == 0){\n    signe = true;        }\nelse\n{\n    signe = false;\n}\nreturn{\n    payload: signe\n}\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 580,
+        "wires": [
+            [
+                "446381dc7165888c",
+                "5814a4e09409a742"
+            ]
+        ]
+    },
+    {
+        "id": "5814a4e09409a742",
+        "type": "debug",
+        "z": "6e237dea746a180c",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "06477b34f7a396cf",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "1883",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "7505d9cc6004f98b",
+        "type": "ui_group",
+        "name": "ECG_direct",
+        "tab": "79d90ca84d710214",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "71fe565a02820c4b",
+        "type": "ui_group",
+        "name": "rssi et snr",
+        "tab": "79d90ca84d710214",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a9fc57da2e570600",
+        "type": "ui_group",
+        "name": "ECG_periodique",
+        "tab": "79d90ca84d710214",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d94bfb8edbbb6967",
+        "type": "ui_group",
+        "name": "seuil_dashboard",
+        "tab": "79d90ca84d710214",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "79d90ca84d710214",
+        "type": "ui_tab",
+        "name": "test",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
