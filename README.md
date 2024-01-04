@@ -14,7 +14,22 @@ THE THINGS UNO / Raspberry Pi, d’une carte amplification AD8232 ECG.
 mesure en direct et périodiquement.
 - Les seuils limites doivent pouvoir être fixées à distance
 
-#
+# Fonctionnalités obligatoires : 
+
+''''''Développer une interface de supervision et configuration locale qui permet''''
+- d'accéder aux mesures directement issues de l’ECG.
+- de tracer l’évolution de l’ECG en direct.
+- d'accéder aux mesures historisées sur une période réglabe.
+- de tracer l’ECG enregistré sur cette période.
+- de "monitorer" la liaison LoRa (Afficher le RSSI et le SNR)
+
+ Développer une interface de supervision et configuration distante qui permet :
+- d'accéder aux mesures de la fréquence cardiaque issues du cloud TTN.
+- d'accéder aux mesures de la fréquence cardiaque historisées sur une période réglable (horodatage 
+début et fin)
+- de "monitorer" la liaison LoRa (Afficher le RSSI et le SNR)
+- de régler les seuils limites pour la surveillance du rythme cardiaque (pouls)
+
 ## 2. Matériels et Technologies utilisées
 
 - Langage de programmation C++, Javascript.
